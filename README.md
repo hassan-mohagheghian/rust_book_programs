@@ -4,7 +4,7 @@ programs of official rust book
 
 In this repository I implement my solution for programs in [official rust book](https://doc.rust-lang.org/book) includes following programs:
 
-- guessing number
+- Guessing Number
 
 ## Note
 
