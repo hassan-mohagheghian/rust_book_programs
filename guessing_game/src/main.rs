@@ -1,42 +1,35 @@
-use rand;
+use rand::Rng;
+use std::cmp::Ordering;
 use std::io;
+
 fn main() {
-    let random_number = rand::random::<u8>();
-    println!("random is {}:", random_number);
-    println!("--------- Guess the number! ---------");
-    println!("-- The guess number is in (0..255) --");
+    println!("Guess the number!");
+
+    let secret_number = rand::thread_rng().gen_range(0..=100);
 
     loop {
-        let mut input = String::new();
-        println!("-- please enter your guess: ");
-        match io::stdin().read_line(&mut input) {
-            Ok(_) => {}
-            Err(err) => {
-                println!("-- In reading your guess an error occured: {}", err);
-                continue;
-            }
-        }
+        println!("Please enter your guess.");
 
-        println!("{}", input);
+        let mut guess = String::new();
 
-        let guess_number = match input.trim().parse::<u8>() {
+        io::stdin()
+            .read_line(&mut guess)
+            .expect("Failed to read line.");
+
+        let guess: i32 = match guess.trim().parse() {
             Ok(num) => num,
-            Err(err) => {
-                println!(
-                    "-- Your guess is not a number in (0..255). please retry. {}",
-                    err
-                );
-                continue;
-            }
+            Err(_) => continue,
         };
 
-        if random_number == guess_number {
-            println!("---- Hooray!. Your guess is correct. You won ----");
-            break;
-        } else if random_number < guess_number {
-            println!("-- Your guess is big. please select lesser than.");
-        } else {
-            println!("-- Your guess is small. please select greater than.");
+        println!("You guessed: {guess}");
+
+        match guess.cmp(&secret_number) {
+            Ordering::Less => println!("Too small!"),
+            Ordering::Equal => {
+                println!("You win!");
+                break;
+            }
+            Ordering::Greater => println!("Too big!"),
         }
     }
 }
